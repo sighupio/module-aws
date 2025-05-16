@@ -9,7 +9,7 @@ In order to test it, you follow the instructions below.
 that cannot be automated with the following script.
 
 This module requires an existing EKS cluster to be executed.
-You may want to have a look at this [example](https://github.com/sighupio/fury-eks-installer/blob/main/examples/README.md).
+You may want to have a look at this [example](https://github.com/sighupio/installer-eks/blob/main/examples/README.md).
 
 ```bash
 # First of all, export the needed env vars for the aws provider to work
