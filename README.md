@@ -59,7 +59,7 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 | [kustomize][kustomize-repo] | `>=3.5.3`  | Packages are customized using `kustomize`. To learn how to create your customization layer with `kustomize`, please refer to the [repository][kustomize-repo]. |
 | [terraform][terraform-repo] | `>=1.3.0`  | Terraform is used to provision packages using modules. To learn how to use `terraform`, please refer to the [repository][terraform-repo].                      |
 
-### Deployment
+### Deployment - furyctl Legacy
 
 1. List the packages you want to deploy and their version in a `Furyfile.yml`
 
@@ -89,7 +89,9 @@ resources:
 - ./vendor/katalog/aws/load-balancer-controller
 ```
 
-> NB: some packages needs additional configurations (IAM roles), they will not work out of the box. Refer to each package documentation for more details.
+> [!NOTE]
+> Some packages will not work out of the box because they need additional configuration (IAM roles, for example).
+> Refer to each package documentation for more details.
 
 5. To deploy the packages to your cluster, execute:
 
@@ -99,12 +101,12 @@ kustomize build . | kubectl apply -f -
 
 <!-- Links -->
 
-[kfd-repo]: https://github.com/sighupio/fury-distribution
+[kfd-repo]: https://github.com/sighupio/distribution
 [furyctl-repo]: https://github.com/sighupio/furyctl
 [kustomize-repo]: https://github.com/kubernetes-sigs/kustomize
 [terraform-repo]: https://github.com/hashicorp/terraform
-[kfd-docs]: https://docs.kubernetesfury.com/docs/distribution/
-[compatibility-matrix]: https://github.com/sighupio/fury-kubernetes-aws/blob/master/docs/COMPATIBILITY_MATRIX.md
+[kfd-docs]: https://docs.sighup.io/docs/distribution/
+[compatibility-matrix]: https://github.com/sighupio/module-aws/blob/master/docs/COMPATIBILITY_MATRIX.md
 
 <!-- </SD-DOCS> -->
 
@@ -112,14 +114,14 @@ kustomize build . | kubectl apply -f -
 
 ## Contributing
 
-Before contributing, please read first the [Contributing Guidelines](docs/CONTRIBUTING.md).
+Before contributing, please read first the [Contributing Guidelines](https://github.com/sighupio/distribution/docs/CONTRIBUTING.md).
 
 ### Reporting Issues
 
-In case you experience any problem with the module, please [open a new issue](https://github.com/sighupio/fury-kubernetes-aws/issues/new/choose).
+In case you experience any problem with the module, please [open a new issue](https://github.com/sighupio/module-aws/issues/new/choose).
 
 ## License
 
-This module is open-source and it's released under the following [LICENSE](LICENSE)
+This module is open-source and it's released under the following [LICENSE](LICENSE).
 
 <!-- </FOOTER> -->
