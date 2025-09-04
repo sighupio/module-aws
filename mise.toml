@@ -1,0 +1,41 @@
+# Copyright (c) 2017-present SIGHUP s.r.l All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+[tools]
+kustomize = "5.6.0"
+dyff = "1.9.0"
+"ubi:google/addlicense" = "v1.1.1"
+
+# Development task definitions
+[tasks.add-license]
+description = "Add license headers to all files"
+run = '''
+echo "📄 Adding license headers..."
+addlicense -c "SIGHUP s.r.l" -y "2017-present" -v -l bsd .
+echo "✅ License headers added!"
+'''
+
+[tasks.validate-manifests]
+description = "Validate all manifests can be built"
+run = '''
+echo "🔍 Validating manifest builds..."
+kustomize build katalog/cluster-autoscaler/base > /dev/null && echo "  ✅ cluster-autoscaler-base"
+kustomize build katalog/cluster-autoscaler/v1.29.x > /dev/null && echo "  ✅ cluster-autoscaler-v1.29.x"
+kustomize build katalog/cluster-autoscaler/v1.30.x > /dev/null && echo "  ✅ cluster-autoscaler-v1.30.x"
+kustomize build katalog/cluster-autoscaler/v1.31.x > /dev/null && echo "  ✅ cluster-autoscaler-v1.31.x"
+kustomize build katalog/cluster-autoscaler/v1.32.x > /dev/null && echo "  ✅ cluster-autoscaler-v1.32.x"
+kustomize build katalog/cluster-autoscaler/v1.33.x > /dev/null && echo "  ✅ cluster-autoscaler-v1.33.x"
+kustomize build katalog/load-balancer-controller > /dev/null && echo "  ✅ load-balancer-controller"
+kustomize build katalog/node-termination-handler > /dev/null && echo "  ✅ node-termination-handler"
+echo "✅ All manifests validated!"
+'''
+
+[tasks.setup]
+description = "Complete development environment setup"
+run = '''
+echo "🚀 Setting up development environment..."
+mise run add-license
+mise run validate-manifests
+echo "✅ Development environment ready!"
+'''
