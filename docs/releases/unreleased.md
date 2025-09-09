@@ -2,19 +2,22 @@
 
 Welcome to the latest release of the `aws` module for the [`SIGHUP Distribution`](https://github.com/sighupio/fury-distribution), maintained by team SIGHUP.
 
-This is a **minor release** that adds compatibility with **Kubernetes 1.33** by updating the cluster-autoscaler component.
+This is a **minor release** that adds compatibility with **Kubernetes 1.33** and upgrades both cluster-autoscaler and aws-load-balancer-controller components.
 
 ## Component Images 🚢
 
-| Component            | Supported Version                                                                            | Previous Version |
-| -------------------- | -------------------------------------------------------------------------------------------- | ---------------- |
-| `cluster-autoscaler` | [`v1.33.0`](https://github.com/kubernetes/autoscaler/releases/tag/cluster-autoscaler-1.33.0) | `v1.32.0`        |
+| Component                      | Supported Version                                                                                 | Previous Version |
+| ------------------------------ | ------------------------------------------------------------------------------------------------- | ---------------- |
+| `cluster-autoscaler`           | [`v1.33.0`](https://github.com/kubernetes/autoscaler/releases/tag/cluster-autoscaler-1.33.0)      | `v1.32.0`        |
+| `aws-load-balancer-controller` | [`v2.13.4`](https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/tag/v2.13.4) | `v2.12.0`        |
 
 > **Note:** Please refer to the individual release notes for detailed information on each update.
 
 ## New Features ✨
 
-- None
+### Kubernetes 1.33 Support
+
+- **Full Kubernetes 1.33 compatibility**: All components tested and validated against Kubernetes 1.33.x clusters
 
 ## Breaking Changes 🚨
 
