@@ -189,6 +189,13 @@ resource "aws_iam_policy" "aws_ebs_csi_driver" {
                     "ec2:ResourceTag/ebs.csi.aws.com/cluster": "true"
                 }
             }
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CreateVolume"
+            ],
+            "Resource": "arn:aws:ec2:*:*:snapshot/*"
         }
     ]
 }
