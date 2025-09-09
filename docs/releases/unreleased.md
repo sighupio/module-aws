@@ -1,6 +1,6 @@
 # AWS Module Release v5.1.0
 
-Welcome to the latest release of the `aws` module for the [`SIGHUP Distribution`](https://github.com/sighupio/fury-distribution), maintained by team SIGHUP.
+Welcome to the latest release of the `aws` module for the [`SIGHUP Distribution`](https://github.com/sighupio/distribution), maintained by team SIGHUP.
 
 This is a **minor release** that adds compatibility with **Kubernetes 1.33** and upgrades cluster-autoscaler, aws-load-balancer-controller, and aws-node-termination-handler components.
 
