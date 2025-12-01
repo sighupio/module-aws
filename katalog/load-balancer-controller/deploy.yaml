@@ -2,12 +2,200 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  labels:
+    app.kubernetes.io/name: aws-load-balancer-controller
+  name: albtargetcontrolconfigs.elbv2.k8s.aws
+spec:
+  group: elbv2.k8s.aws
+  names:
+    kind: ALBTargetControlConfig
+    listKind: ALBTargetControlConfigList
+    plural: albtargetcontrolconfigs
+    singular: albtargetcontrolconfig
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: The ALB target control agent sidecar image
+      jsonPath: .spec.image
+      name: IMAGE
+      type: string
+    - description: Application destination address
+      jsonPath: .spec.destinationAddress
+      name: DESTINATION
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: ALBTargetControlConfig is the Schema for the albtargetcontrolconfigs
+          API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ALBTargetControlConfigSpec defines the desired state of ALBTargetControlConfig
+            properties:
+              controlAddress:
+                description: |-
+                  ControlAddress specifies the socket (IP:port) where the load balancer exchanges management traffic with agents.
+                  The port in the socket is the target control port you configure for the target group.
+                pattern: ^.+:[0-9]+$
+                type: string
+              dataAddress:
+                description: |-
+                  DataAddress specifies the socket (IP:port) where the agent receives application traffic from the load balancer.
+                  The port in this socket is the application traffic port you configure for your target group.
+                pattern: ^.+:[0-9]+$
+                type: string
+              destinationAddress:
+                description: |-
+                  DestinationAddress specifies the socket (IP:port) where the agent proxies application traffic.
+                  Your application should be listening on this port.
+                pattern: ^.+:[0-9]+$
+                type: string
+              image:
+                description: |-
+                  Image specifies the container image for the ALB target control agent sidecar.
+                  The agent is available as a Docker image at: public.ecr.aws/aws-elb/target-optimizer/target-control-agent:latest
+                type: string
+              maxConcurrency:
+                default: 1
+                description: MaxConcurrency specifies the maximum number of concurrent
+                  requests that the target receives from the load balancer.
+                format: int32
+                maximum: 1000
+                minimum: 0
+                type: integer
+              protocolVersion:
+                description: |-
+                  ProtocolVersion specifies the protocol through which the load balancer communicates with the agent.
+                  Possible values are HTTP1, HTTP2, GRPC.
+                enum:
+                - HTTP1
+                - HTTP2
+                - GRPC
+                type: string
+              resources:
+                description: Resources specifies the resource requirements for the
+                  ALB target control agent sidecar
+                properties:
+                  claims:
+                    description: |-
+                      Claims lists the names of resources, defined in spec.resourceClaims,
+                      that are used by this container.
+
+                      This is an alpha field and requires enabling the
+                      DynamicResourceAllocation feature gate.
+
+                      This field is immutable. It can only be set for containers.
+                    items:
+                      description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                      properties:
+                        name:
+                          description: |-
+                            Name must match the name of one entry in pod.spec.resourceClaims of
+                            the Pod where this field is used. It makes that resource available
+                            inside a container.
+                          type: string
+                        request:
+                          description: |-
+                            Request is the name chosen for a request in the referenced claim.
+                            If empty, everything from the claim is made available, otherwise
+                            only the result of this request.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                  limits:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Limits describes the maximum amount of compute resources allowed.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                  requests:
+                    additionalProperties:
+                      anyOf:
+                      - type: integer
+                      - type: string
+                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                      x-kubernetes-int-or-string: true
+                    description: |-
+                      Requests describes the minimum amount of compute resources required.
+                      If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+                      otherwise to an implementation-defined value. Requests cannot exceed Limits.
+                      More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
+                    type: object
+                type: object
+              rustLog:
+                description: |-
+                  RustLog specifies the log level of the agent process. The agent software is written in Rust.
+                  Possible values are debug, info, and error.
+                enum:
+                - debug
+                - info
+                - error
+                type: string
+              tlsCertPath:
+                description: |-
+                  TLSCertPath specifies the location of the TLS certificate that the agent provides to the load balancer during TLS handshake.
+                  By default, the agent generates a self-signed certificate in-memory.
+                type: string
+              tlsKeyPath:
+                description: |-
+                  TLSKeyPath specifies the location of the private key corresponding to the TLS certificate that the agent provides to the load balancer during TLS handshake.
+                  By default, the agent generates a private key in memory.
+                type: string
+              tlsSecurityPolicy:
+                description: TLSSecurityPolicy specifies the ELB security policy that
+                  you configure for the target group.
+                type: string
+            required:
+            - controlAddress
+            - dataAddress
+            - destinationAddress
+            - image
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources: {}
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   labels:
     app.kubernetes.io/name: aws-load-balancer-controller
   name: ingressclassparams.elbv2.k8s.aws
@@ -17,7 +205,7 @@ spec:
     kind: IngressClassParams
     listKind: IngressClassParamsList
     plural: ingressclassparams
-    singular: ingressclassparams
+    singular: ingressclassparam
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -62,8 +250,9 @@ spec:
             description: IngressClassParamsSpec defines the desired state of IngressClassParams
             properties:
               PrefixListsIDs:
-                description: PrefixListsIDs defines the security group prefix lists
-                  for all Ingresses that belong to IngressClass with this IngressClassParams.
+                description: |-
+                  PrefixListsIDsLegacy defines the security group prefix lists for all Ingresses that belong to IngressClass with this IngressClassParams.
+                  Not Recommended, Use PrefixListsIDs (prefixListsIDs in JSON) instead
                 items:
                   type: string
                 type: array
@@ -154,6 +343,10 @@ spec:
                   - value
                   type: object
                 type: array
+              loadBalancerName:
+                description: LoadBalancerName defines the name of the load balancer
+                  that will be created with this IngressClassParams.
+                type: string
               minimumLoadBalancerCapacity:
                 description: MinimumLoadBalancerCapacity define the capacity reservation
                   for LoadBalancers for all Ingress that belong to IngressClass with
@@ -214,6 +407,12 @@ spec:
                     type: object
                 type: object
                 x-kubernetes-map-type: atomic
+              prefixListsIDs:
+                description: PrefixListsIDs defines the security group prefix lists
+                  for all Ingresses that belong to IngressClass with this IngressClassParams.
+                items:
+                  type: string
+                type: array
               scheme:
                 description: Scheme defines the scheme for all Ingresses that belong
                   to IngressClass with this IngressClassParams.
@@ -224,6 +423,10 @@ spec:
               sslPolicy:
                 description: SSLPolicy specifies the SSL Policy for all Ingresses
                   that belong to IngressClass with this IngressClassParams.
+                type: string
+              sslRedirectPort:
+                description: SSLRedirectPort specifies the SSL Redirect Port for all
+                  Ingresses that belong to IngressClass with this IngressClassParams.
                 type: string
               subnets:
                 description: Subnets defines the subnets for all Ingresses that belong
@@ -274,7 +477,16 @@ spec:
                 - instance
                 - ip
                 type: string
+              wafv2AclArn:
+                description: WAFv2ACLArn specifies ARN for the Amazon WAFv2 web ACL.
+                type: string
+              wafv2AclName:
+                description: WAFv2ACLName specifies name of the Amazon WAFv2 web ACL.
+                type: string
             type: object
+            x-kubernetes-validations:
+            - message: cannot specify both 'prefixListsIDs' and 'PrefixListsIDs' fields
+              rule: '!(has(self.prefixListsIDs) && has(self.PrefixListsIDs))'
         type: object
     served: true
     storage: true
@@ -284,7 +496,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.19.0
   labels:
     app.kubernetes.io/name: aws-load-balancer-controller
   name: targetgroupbindings.elbv2.k8s.aws
@@ -704,6 +916,19 @@ spec:
               targetGroupName:
                 description: targetGroupName is the Name of the TargetGroup.
                 type: string
+              targetGroupProtocol:
+                description: targetGroupProtocol is the Protocol of the TargetGroup.
+                  If unspecified, it will be automatically inferred.
+                enum:
+                - HTTP
+                - HTTPS
+                - TCP
+                - TLS
+                - UDP
+                - TCP_UDP
+                - QUIC
+                - TCP_QUIC
+                type: string
               targetType:
                 description: targetType is the TargetType of TargetGroup. If unspecified,
                   it will be automatically inferred.
@@ -802,6 +1027,9 @@ rules:
   - ""
   resources:
   - endpoints
+  - namespaces
+  - nodes
+  - pods
   verbs:
   - get
   - list
@@ -816,31 +1044,8 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
   - pods/status
+  - services/status
   verbs:
   - patch
   - update
@@ -855,13 +1060,6 @@ rules:
   - update
   - watch
 - apiGroups:
-  - ""
-  resources:
-  - services/status
-  verbs:
-  - patch
-  - update
-- apiGroups:
   - discovery.k8s.io
   resources:
   - endpointslices
@@ -869,6 +1067,12 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - elbv2.k8s.aws
+  resources:
+  - albtargetcontrolconfigs
+  verbs:
+  - get
 - apiGroups:
   - elbv2.k8s.aws
   resources:
@@ -898,6 +1102,7 @@ rules:
   - update
 - apiGroups:
   - extensions
+  - networking.k8s.io
   resources:
   - ingresses
   verbs:
@@ -908,6 +1113,7 @@ rules:
   - watch
 - apiGroups:
   - extensions
+  - networking.k8s.io
   resources:
   - ingresses/status
   verbs:
@@ -973,6 +1179,8 @@ rules:
 - apiGroups:
   - gateway.k8s.aws
   resources:
+  - listenerruleconfigurations/finalizers
+  - loadbalancerconfigurations/finalizers
   - targetgroupconfigurations/finalizers
   verbs:
   - patch
@@ -980,6 +1188,8 @@ rules:
 - apiGroups:
   - gateway.k8s.aws
   resources:
+  - listenerruleconfigurations/status
+  - loadbalancerconfigurations/status
   - targetgroupconfigurations/status
   verbs:
   - get
@@ -989,97 +1199,7 @@ rules:
   - gateway.networking.k8s.io
   resources:
   - gatewayclasses
-  verbs:
-  - get
-  - list
-  - patch
-  - watch
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - gatewayclasses/finalizers
-  verbs:
-  - patch
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - gatewayclasses/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
   - gateways
-  verbs:
-  - get
-  - list
-  - patch
-  - watch
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - gateways/finalizers
-  verbs:
-  - patch
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - gateways/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - grpcroutes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - grpcroutes/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - grpcroutes/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - httproutes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - httproutes/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - httproutes/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
   - referencegrants
   verbs:
   - get
@@ -1089,43 +1209,21 @@ rules:
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
-  - tcproutes
+  - gatewayclasses/finalizers
+  - gateways/finalizers
   verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - tcproutes/finalizers
-  verbs:
+  - patch
   - update
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
+  - gatewayclasses/status
+  - gateways/status
+  - grpcroutes/status
+  - httproutes/status
   - tcproutes/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - tlsroutes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - tlsroutes/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
   - tlsroutes/status
+  - udproutes/status
   verbs:
   - get
   - patch
@@ -1133,6 +1231,10 @@ rules:
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
+  - grpcroutes
+  - httproutes
+  - tcproutes
+  - tlsroutes
   - udproutes
   verbs:
   - get
@@ -1141,16 +1243,12 @@ rules:
 - apiGroups:
   - gateway.networking.k8s.io
   resources:
+  - grpcroutes/finalizers
+  - httproutes/finalizers
+  - tcproutes/finalizers
+  - tlsroutes/finalizers
   - udproutes/finalizers
   verbs:
-  - update
-- apiGroups:
-  - gateway.networking.k8s.io
-  resources:
-  - udproutes/status
-  verbs:
-  - get
-  - patch
   - update
 - apiGroups:
   - networking.k8s.io
@@ -1160,23 +1258,6 @@ rules:
   - get
   - list
   - watch
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - ingresses
-  verbs:
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - ingresses/status
-  verbs:
-  - patch
-  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1248,7 +1329,7 @@ spec:
       - args:
         - --cluster-name=$(CLUSTER_NAME)
         - --ingress-class=alb
-        image: public.ecr.aws/eks/aws-load-balancer-controller:v2.13.4
+        image: public.ecr.aws/eks/aws-load-balancer-controller:v2.16.0
         env:
           - name: CLUSTER_NAME
             value: changeme
@@ -1372,6 +1453,105 @@ webhooks:
       operator: NotIn
       values:
       - aws-load-balancer-controller
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    resources:
+    - pods
+  sideEffects: None
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: aws-load-balancer-webhook-service
+      namespace: kube-system
+      path: /mutate-v1-pod-server-id
+  failurePolicy: Fail
+  name: quicid.elbv2.k8s.aws
+  namespaceSelector:
+    matchExpressions:
+    - key: elbv2.k8s.aws/quic-server-id-inject
+      operator: In
+      values:
+      - enabled
+  objectSelector:
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: NotIn
+      values:
+      - aws-load-balancer-controller
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    resources:
+    - pods
+  sideEffects: None
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: aws-load-balancer-webhook-service
+      namespace: kube-system
+      path: /mutate-alb-target-control-namespace-v1-pod
+  failurePolicy: Fail
+  name: alb-target-control.namespace.elbv2.k8s.aws
+  namespaceSelector:
+    matchExpressions:
+    - key: elbv2.k8s.aws/alb-target-control-agent-injection
+      operator: In
+      values:
+      - enabled
+  objectSelector:
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: NotIn
+      values:
+      - aws-load-balancer-controller
+    - key: elbv2.k8s.aws/alb-target-control-agent-inject
+      operator: NotIn
+      values:
+      - "false"
+  rules:
+  - apiGroups:
+    - ""
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    resources:
+    - pods
+  sideEffects: None
+- admissionReviewVersions:
+  - v1beta1
+  clientConfig:
+    service:
+      name: aws-load-balancer-webhook-service
+      namespace: kube-system
+      path: /mutate-alb-target-control-object-v1-pod
+  failurePolicy: Fail
+  name: alb-target-control.object.elbv2.k8s.aws
+  namespaceSelector:
+    matchExpressions:
+    - key: elbv2.k8s.aws/alb-target-control-agent-injection
+      operator: DoesNotExist
+  objectSelector:
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: NotIn
+      values:
+      - aws-load-balancer-controller
+    - key: elbv2.k8s.aws/alb-target-control-agent-inject
+      operator: In
+      values:
+      - "true"
   rules:
   - apiGroups:
     - ""
