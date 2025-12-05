@@ -7,7 +7,7 @@
   AWS Module
 </h1>
 
-![Release](https://img.shields.io/badge/Latest%20Release-v5.1.0-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v5.2.0-blue)
 ![License](https://img.shields.io/github/license/sighupio/module-aws?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
@@ -27,7 +27,7 @@ The following packages are included in AWS Module:
 
 | Package                                                                               | Version                           | Description                                                                                                 |
 | ------------------------------------------------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| [cluster-autoscaler](katalog/cluster-autoscaler)                                      | `v1.29.0,v1.30.2,v1.31.0,v1.32.0,v1.33.0` | A component that automatically adjusts the size of a Kubernetes Cluster                                     |
+| [cluster-autoscaler](katalog/cluster-autoscaler)                                      | `v1.29.0,v1.30.2,v1.31.0,v1.32.0,v1.33.0,v1.34.0` | A component that automatically adjusts the size of a Kubernetes Cluster                                     |
 | [IAM role for cluster-autoscaler](modules/iam-for-cluster-autoscaler)                 | `-`                               | Terraform module to manage IAM role used by cluster-autoscaler                                              |
 | [aws-node-termination-handler](katalog/node-termination-handler)                      | `v1.25.2`                         | Automatically manage graceful termination of pods in the event that one node is retired by AWS              |
 | [aws-load-balancer-controller](katalog/load-balancer-controller)                      | `v2.13.4`                         | AWS Load Balancer Controller is a controller to help manage Elastic Load Balancers for a Kubernetes cluster |
@@ -42,11 +42,11 @@ Click on each package to see its full documentation.
 
 | Kubernetes Version |   Compatibility    | Notes           |
 | ------------------ | :----------------: | --------------- |
-| `1.29.x`           | :white_check_mark: | No known issues |
 | `1.30.x`           | :white_check_mark: | No known issues |
 | `1.31.x`           | :white_check_mark: | No known issues |
 | `1.32.x`           | :white_check_mark: | No known issues |
 | `1.33.x`           | :white_check_mark: | No known issues |
+| `1.34.x`           | :white_check_mark: | No known issues |
 
 Check the [compatibility matrix][compatibility-matrix] for additional informations about previous releases of the modules.
 
@@ -67,11 +67,11 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 ```yaml
 bases:
   - name: aws/cluster-autoscaler
-    version: "v5.1.0"
+    version: "v5.2.0"
   - name: aws/node-termination-handler
-    version: "v5.1.0"
+    version: "v5.2.0"
   - name: aws/load-balancer-controller
-    version: "v5.1.0"
+    version: "v5.2.0"
 
 ```
 
@@ -85,7 +85,7 @@ bases:
 
 ```yaml
 resources:
-- ./vendor/katalog/aws/cluster-autoscaler/{v1.29.x,v1.30.x,v1.31.x,v1.32.x,v1.33.x}
+- ./vendor/katalog/aws/cluster-autoscaler/{v1.29.x,v1.30.x,v1.31.x,v1.32.x,v1.33.x,v1.34.x}
 - ./vendor/katalog/aws/node-termination-handler
 - ./vendor/katalog/aws/load-balancer-controller
 ```
