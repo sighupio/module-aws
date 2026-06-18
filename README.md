@@ -52,61 +52,41 @@ Check the [compatibility matrix][compatibility-matrix] for additional informatio
 
 ## Usage
 
-### Prerequisites
+**AWS Module** is part of SIGHUP Distribution (SD) and is deployed automatically by [`furyctl`][furyctl-repo] when you create an **EKS cluster**. You don't need to download, vendor or install its packages manually.
 
-| Tool                        | Version    | Description                                                                                                                                                    |
-| --------------------------- |------------| -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [furyctl][furyctl-repo]     | `>=0.25.0` | The recommended tool to download and manage SD modules and their packages. To learn more about `furyctl` read the [official documentation][furyctl-repo].     |
-| [kustomize][kustomize-repo] | `>=3.5.3`  | Packages are customized using `kustomize`. To learn how to create your customization layer with `kustomize`, please refer to the [repository][kustomize-repo]. |
-| [terraform][terraform-repo] | `>=1.3.0`  | Terraform is used to provision packages using modules. To learn how to use `terraform`, please refer to the [repository][terraform-repo].                      |
+### Configuration
 
-### Deployment - furyctl Legacy
-
-1. List the packages you want to deploy and their version in a `Furyfile.yml`
+When the provider is EKS, the module is deployed with sensible defaults. Configuration is **optional**: you can customize its packages under `spec.distribution.modules.aws` in your `furyctl.yaml`. If you omit the block, the defaults are applied.
 
 ```yaml
-bases:
-  - name: aws/cluster-autoscaler
-    version: "v5.2.0"
-  - name: aws/node-termination-handler
-    version: "v5.2.0"
-  - name: aws/load-balancer-controller
-    version: "v5.2.0"
-
+apiVersion: kfd.sighup.io/v1alpha2
+kind: EKSCluster
+spec:
+  distribution:
+    modules:
+      aws:
+        clusterAutoscaler:
+          overrides:
+            nodeSelector:
+              node.kubernetes.io/role: infra
+        loadBalancerController:
+          overrides:
+            iamRoleName: aws-load-balancer-controller
+        ebsCsiDriver: {}
+        ebsSnapshotController: {}
 ```
 
-> See `furyctl` [documentation][furyctl-repo] for additional details about `Furyfile.yml` format.
+See the [EKSCluster configuration reference][schema-reference] for the full list of available options.
 
-2. Execute `furyctl legacy vendor -H` to download the packages
-
-3. Inspect the download packages under `./vendor/katalog/aws`.
-
-4. Define a `kustomization.yaml` that includes the `./vendor/katalog/aws` directory as resource.
-
-```yaml
-resources:
-- ./vendor/katalog/aws/cluster-autoscaler/{v1.29.x,v1.30.x,v1.31.x,v1.32.x,v1.33.x,v1.34.x}
-- ./vendor/katalog/aws/node-termination-handler
-- ./vendor/katalog/aws/load-balancer-controller
-```
-
-> [!NOTE]
-> Some packages will not work out of the box because they need additional configuration (IAM roles, for example).
-> Refer to each package documentation for more details.
-
-5. To deploy the packages to your cluster, execute:
-
-```bash
-kustomize build . | kubectl apply -f -
-```
+To install SD on EKS from scratch, follow the [Getting started on EKS][getting-started-eks] guide.
 
 <!-- Links -->
 
 [kfd-repo]: https://github.com/sighupio/distribution
 [furyctl-repo]: https://github.com/sighupio/furyctl
-[kustomize-repo]: https://github.com/kubernetes-sigs/kustomize
-[terraform-repo]: https://github.com/hashicorp/terraform
 [kfd-docs]: https://docs.sighup.io/docs/distribution/
+[schema-reference]: https://docs.sighup.io/docs/reference/ekscluster#specdistributionmodulesaws
+[getting-started-eks]: https://docs.sighup.io/docs/getting-started/distro-on-eks
 [compatibility-matrix]: https://github.com/sighupio/module-aws/blob/master/docs/COMPATIBILITY_MATRIX.md
 
 <!-- </SD-DOCS> -->
