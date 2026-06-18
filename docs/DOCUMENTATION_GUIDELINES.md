@@ -49,5 +49,10 @@ distribution user — not a module maintainer — were reading it on the website
 These are not published and may keep implementation detail:
 
 - `katalog/*/MAINTENANCE.md` — how packages are rebuilt from upstream.
-- `modules/*/README.md` — Terraform module references (terraform-docs output).
+- `modules/*/README.md` — Terraform/OpenTofu module references. These modules are consumed
+  automatically by the distribution (`furyctl` renders the Terraform that references them via
+  `relativeVendorPath`), not used standalone. Each one starts with a note clarifying it is part
+  of SD and managed by `furyctl`; the standalone `Usage` example with a `../vendor/...` source
+  must not be documented. Keep the `Inputs`/`Outputs` tables aligned with what the distribution
+  templates actually use (no legacy kustomize-patch outputs).
 - `examples/` — working examples for contributors.

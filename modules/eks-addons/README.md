@@ -1,6 +1,8 @@
 # EKS addons module
 
-This terraform module provides an easy way to install addons on an existing EKS cluster.
+This Terraform module installs addons on an existing EKS cluster.
+
+> **Note**: This module is part of [SIGHUP Distribution (SD)](https://github.com/sighupio/distribution) and is consumed automatically by `furyctl` when you create an EKS cluster. You don't need to use it directly: its inputs are derived from your `furyctl.yaml`. The reference below is intended for maintainers and contributors.
 
 ## Requirements
 
@@ -40,36 +42,6 @@ Moreover, `ebs_csi_driver` and `vpc_cni` have the following parameter:
 |   Name                   |                           Description                                                                  | Type     | Default     | Required |
 | ------------------------ | ------------------------------------------------------------------------------------------------------ | -------- | ----------- | -------- |
 | service_account_role_arn |  The ARN of an existing IAM role to bind to the add-on's service account                               | `string` | n/a         | No       |
-
-## Usage
-
-```hcl
-module "addons" {
-  source         = "../vendor/modules/aws/eks-addons"
-  cluster_name   = "myekscluster"
-  ebs_csi_driver = {
-    enabled = true
-    version = "v1.19.0-eksbuild.2"
-  }
-  snapshot_controller = {
-    enabled = true
-    version = "v8.2.0-eksbuild.1"
-    configuration_values = file("snapshot-controller.json")
-  }
-  coredns = {
-    enabled = true
-    resolve_conflicts = "NONE"
-  }
-  kube_proxy = {
-    enabled = true
-  }
-  vpc_cni = {
-    enabled = true
-    configuration_values = file("coredns.json")
-  }
-}
-
-```
 
 ## Check the correct version
 
