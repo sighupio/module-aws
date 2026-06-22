@@ -13,12 +13,6 @@ AWS Load Balancer Controller manages AWS Elastic Load Balancers for a Kubernetes
 
 This package is based on the upstream [AWS Load Balancer Controller][github].
 
-## Compatibility
-
-| Kubernetes Version | Compatibility      |
-| ------------------ | :----------------: |
-| `1.30.x` - `1.34.x` | :white_check_mark: |
-
 ## Deployment
 
 This package is deployed as part of **AWS Module** when you create an EKS cluster with `furyctl`. It requires an IAM role (via IRSA) to manage Elastic Load Balancers, which is provisioned automatically by the distribution.

@@ -10,12 +10,6 @@ Cluster Autoscaler automatically adjusts the size of a Kubernetes cluster so tha
 
 This package is based on the upstream [Kubernetes Cluster Autoscaler][ca-github].
 
-## Compatibility
-
-| Kubernetes Version | Compatibility      |
-| ------------------ | :----------------: |
-| `1.30.x` - `1.34.x` | :white_check_mark: |
-
 ## Deployment
 
 This package is deployed as part of **AWS Module** when you create an EKS cluster with `furyctl`. It requires an IAM role (via IRSA) to interact with the AWS Auto Scaling APIs, which is provisioned automatically by the distribution.

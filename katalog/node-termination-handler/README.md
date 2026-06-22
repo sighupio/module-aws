@@ -16,12 +16,6 @@ It runs as an Instance Metadata Service processor and monitors:
 
 This package is based on the upstream [AWS Node Termination Handler][github].
 
-## Compatibility
-
-| Kubernetes Version | Compatibility      |
-| ------------------ | :----------------: |
-| `1.30.x` - `1.34.x` | :white_check_mark: |
-
 ## Deployment
 
 This package is deployed as part of **AWS Module** when you create an EKS cluster with `furyctl`. See the [module documentation](../../README.md) to learn how the AWS Module is installed and configured.
