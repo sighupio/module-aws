@@ -2,95 +2,24 @@
 
 <!-- <SD-DOCS> -->
 
-A component that automatically adjusts the size of a Kubernetes Cluster so that all pods have a place to run and there are no unneeded nodes. Supports several public cloud providers. Version 1.0 (GA) was released with Kubernetes 1.8.
+## Overview
 
-## Requirements
+Cluster Autoscaler automatically adjusts the size of a Kubernetes cluster so that all pods have a place to run and there are no unneeded nodes. On AWS it scales the cluster's EC2 Auto Scaling Groups up and down based on pending pods and node utilization.
 
-- Kubernetes >= `1.28.0`
-- Kustomize = `v3.5.3`
+## Upstream project
 
-## Image repository and tag
-
-- Cluster autoscaler image: `registry.sighup.io/autoscaling/cluster-autoscaler:v1.29.0,v1.30.2,v1.31.0,v1.32.0,v1.33.0`
-- Cluster autoscaler repo: [Cluster autoscaler at Github][ca-github]
+This package is based on the upstream [Kubernetes Cluster Autoscaler][ca-github].
 
 ## Deployment
 
-You can deploy cluster autoscaler in your EKS cluster by including the package in your Kustomize project:
+This package is deployed as part of **AWS Module** when you create an EKS cluster with `furyctl`. It requires an IAM role (via IRSA) to interact with the AWS Auto Scaling APIs, which is provisioned automatically by the distribution.
 
-`kustomization.yaml` file extract:
-
-```yaml
-...
-
-resources:
-  - katalog/cluster-autoscaler/{v1.29.x,v1.30.x,v1.31.x,v1.32.x,v1.33.x}
-
-...
-```
-
-Refer to the Terraform module [iam-for-cluster-autoscaler](../../modules/iam-for-cluster-autoscaler) to create the IAM role and the required kustomize patches automatically.
-
-If still you want to create everything manually without using our Terraform Module, you need to patch the service account, the cluster name (for example `mycluster`) and the region (for example `eu-west-1`) as follows:
-
-`sa-patch.yaml`
-
-```yaml
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::123456789123:role/your-role-name
-  name: cluster-autoscaler
-  namespace: kube-system
-```
-
-`cluster-autoscaler-patch.yaml`
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: cluster-autoscaler
-  name: cluster-autoscaler
-  namespace: kube-system
-spec:
-  template:
-    spec:
-      containers:
-        - name: aws-cluster-autoscaler
-          env:
-            - name: AWS_REGION
-              value: "eu-west-1"
-            - name: CLUSTER_NAME
-              value: mycluster
-```
-
-and then add on the `kustomization.yaml` file the patches:
-
-`kustomization.yaml` file extract:
-
-```yaml
-...
-
-patchesStrategicMerge:
-  - sa-patch.yaml
-  - cluster-autoscaler-patch.yaml
-
-...
-```
-
-You can then apply your kustomize project by running the following command:
-
-```bash
-kustomize build | kubectl apply -f -
-```
+You can customize it under `spec.distribution.modules.aws.clusterAutoscaler` in your `furyctl.yaml`. See the [module documentation](../../README.md) and the [EKSCluster configuration reference][schema-reference] for the available options.
 
 <!-- Links -->
 
 [ca-github]: https://github.com/kubernetes/autoscaler
+[schema-reference]: https://docs.sighup.io/docs/reference/ekscluster#specdistributionmodulesaws
 
 <!-- </SD-DOCS> -->
 

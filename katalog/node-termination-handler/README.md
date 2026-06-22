@@ -2,32 +2,23 @@
 
 <!-- <SD-DOCS> -->
 
-This package ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instance to become unavailable, such as EC2 maintenance events, EC2 Spot interruptions, ASG Scale-In, ASG AZ Rebalance, and EC2 Instance Termination via the API or Console.
-If not handled, your application code may not stop gracefully, take longer to recover full availability, or accidentally schedule work to nodes that are going down.
+## Overview
 
-This package is deployed as Instance Metadata Service Processor to monitor:
+AWS Node Termination Handler ensures that the Kubernetes control plane responds appropriately to events that can cause your EC2 instances to become unavailable, such as EC2 maintenance events, EC2 Spot interruptions, ASG Scale-In, ASG AZ Rebalance, and EC2 instance termination via the API or Console. Without it, your workloads may not stop gracefully, take longer to recover full availability, or be scheduled onto nodes that are going down.
 
-- EC2 Metadata for Scheduled Maintenance Events
-- EC2 Metadata for Spot Instance Termination Notifications
-- EC2 Metadata for Rebalance Recommendation Notifications
+It runs as an Instance Metadata Service processor and monitors:
 
-## Requirements
+- EC2 metadata for scheduled maintenance events
+- EC2 metadata for Spot instance termination notifications
+- EC2 metadata for rebalance recommendation notifications
 
-- Kubernetes >= `1.21.0`
-- Kustomize >= `v3.5.3`
+## Upstream project
 
-## Image repository and tag
-
-- AWS node termination handler image: `registry.sighup.io/fury/aws-ec2/aws-node-termination-handler`
-- AWS node termination handler repo: [AWS node termination handler at Github][github]
+This package is based on the upstream [AWS Node Termination Handler][github].
 
 ## Deployment
 
-You can deploy AWS node termination handler by running the following command:
-
-```bash
-kustomize build | kubectl apply -f -
-```
+This package is deployed as part of **AWS Module** when you create an EKS cluster with `furyctl`. See the [module documentation](../../README.md) to learn how the AWS Module is installed and configured.
 
 <!-- Links -->
 
