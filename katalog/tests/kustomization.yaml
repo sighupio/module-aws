@@ -1,0 +1,20 @@
+# Copyright (c) 2017-present SIGHUP s.r.l All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: kube-system
+resources:
+  - ../cluster-autoscaler/v1.34.x
+  - ../load-balancer-controller
+  - ../node-termination-handler
+patches:
+  - target:
+      kind: DaemonSet
+      name: aws-node-termination-handler
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          ignore-check.kube-linter.io/host-network: "required to access instance metadata"

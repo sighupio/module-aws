@@ -15,3 +15,15 @@ images:
   - name: public.ecr.aws/eks/aws-load-balancer-controller # public.ecr.aws/eks/aws-load-balancer-controller:v2.4.7
     newName: registry.sighup.io/fury/amazon/aws-alb-ingress-controller
     newTag: v2.13.4
+
+patches:
+  - target:
+      kind: Deployment
+      name: aws-load-balancer-controller
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/ports/-
+        value:
+          containerPort: 61779
+          name: healthz
+          protocol: TCP

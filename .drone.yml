@@ -6,23 +6,33 @@ name: license
 kind: pipeline
 type: docker
 node:
-   performance: low
+  performance: low
 clone:
   depth: 1
+volumes:
+  - name: mise-cache
+    host:
+      path: /root/mise_data_dir
 steps:
   - name: check
-    image: docker.io/library/golang:1.21
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
+    environment:
+      MISE_DATA_DIR: /mise-data
+      GITHUB_TOKEN:
+        from_secret: github_token
+    volumes:
+      - name: mise-cache
+        path: /mise-data
     commands:
-      - go install github.com/google/addlicense@v1.1.1
-      - addlicense -c "SIGHUP s.r.l" -v -l bsd --check .
+      - mise run check-license
 
 ---
-name: linting
+name: validate
 kind: pipeline
 type: docker
 node:
-   performance: low
+  performance: low
 depends_on:
   - license
 clone:
@@ -36,11 +46,10 @@ volumes:
       path: /root/mise_data_dir
 steps:
   - name: render
-    image: quay.io/sighup/mise:v2025.4.4
+    image: quay.io/sighup/mise:v2026.6.14
     pull: always
     environment:
       MISE_DATA_DIR: /mise-data
-      MISE_OVERRIDE_CONFIG_FILENAMES: "mise.ci.toml"
       GITHUB_TOKEN:
         from_secret: github_token
     volumes:
@@ -49,9 +58,7 @@ steps:
     depends_on:
       - clone
     commands:
-      - |
-        mise use kustomize@5.6.0
-        eval "$(mise activate bash --shims)"
+      - eval "$(mise activate bash --shims)"
       - kustomize build katalog/cluster-autoscaler/base > cluster-autoscaler-base.yml
       - kustomize build katalog/cluster-autoscaler/v1.29.x > cluster-autoscaler-v1.29.yml
       - kustomize build katalog/cluster-autoscaler/v1.30.x > cluster-autoscaler-v1.30.yml
@@ -61,12 +68,27 @@ steps:
       - kustomize build katalog/load-balancer-controller > load-balancer-controller.yml
       - kustomize build katalog/node-termination-handler > node-termination-handler.yml
 
+  - name: lint
+    image: quay.io/sighup/mise:v2026.6.14
+    pull: always
+    environment:
+      MISE_DATA_DIR: /mise-data
+      GITHUB_TOKEN:
+        from_secret: github_token
+    volumes:
+      - name: mise-cache
+        path: /mise-data
+    depends_on:
+      - render
+    commands:
+      - mise run lint
+
   - &check-deprecated-apis
     name: check-deprecated-apis
     image: us-docker.pkg.dev/fairwinds-ops/oss/pluto:v5
     pull: always
     depends_on:
-      - render
+      - lint
     commands:
       # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
       - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.33.0
@@ -113,12 +135,12 @@ name: release
 kind: pipeline
 type: docker
 node:
-   performance: low
+  performance: low
 clone:
   depth: 1
 
 depends_on:
-  - linting
+  - validate
 
 platform:
   os: linux
@@ -133,7 +155,7 @@ steps:
   - name: prepare-tar-gz
     image: alpine:latest
     pull: always
-    depends_on: [clone]
+    depends_on: [ clone ]
     commands:
       - tar -zcvf kubernetes-fury-aws-${DRONE_TAG}.tar.gz katalog/ LICENSE README.md
     when:
@@ -144,7 +166,7 @@ steps:
   - name: prepare-release-notes
     image: quay.io/sighup/fury-release-notes-plugin:3.7_2.8.4
     pull: always
-    depends_on: [clone]
+    depends_on: [ clone ]
     settings:
       release_notes_file_path: release-notes.md
     when:
