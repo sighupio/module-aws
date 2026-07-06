@@ -57,10 +57,26 @@ rules:
     verbs:
     - watch
     - list
-    - create
-    - delete
     - get
     - update
+  - apiGroups:
+      - ""
+    resources:
+      - podtemplates
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - resource.k8s.io
+    resources:
+      - resourceslices
+      - deviceclasses
+      - resourceclaims
+    verbs:
+      - watch
+      - list
+      - get
   - apiGroups:
     - ""
     resources:
@@ -154,6 +170,17 @@ rules:
     verbs:
     - get
     - update
+  - apiGroups:
+    - autoscaling.x-k8s.io
+    resources:
+    - provisioningrequests
+    - provisioningrequests/status
+    verbs:
+    - get
+    - list
+    - watch
+    - update
+    - patch
 ---
 # Source: cluster-autoscaler/templates/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
