@@ -20,40 +20,40 @@ metadata:
   labels:
     app: aws-node-termination-handler
 rules:
-- apiGroups:
-    - ""
-  resources:
-    - nodes
-  verbs:
-    - get
-    - list
-    - patch
-    - update
-- apiGroups:
-    - ""
-  resources:
-    - pods
-  verbs:
-    - list
-    - get
-- apiGroups:
-    - ""
-  resources:
-    - pods/eviction
-  verbs:
-    - create
-- apiGroups:
-    - extensions
-  resources:
-    - daemonsets
-  verbs:
-    - get
-- apiGroups:
-    - apps
-  resources:
-    - daemonsets
-  verbs:
-    - get
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - list
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - pods/eviction
+    verbs:
+      - create
+  - apiGroups:
+      - extensions
+    resources:
+      - daemonsets
+    verbs:
+      - get
+  - apiGroups:
+      - apps
+    resources:
+      - daemonsets
+    verbs:
+      - get
 ---
 # Source: aws-node-termination-handler/templates/clusterrolebinding.yaml
 kind: ClusterRoleBinding
@@ -174,9 +174,9 @@ spec:
             - name: UPTIME_FROM_FILE
               value: "/proc/uptime"
           ports:
-           - name: http-metrics
-             protocol: TCP
-             containerPort: 9092
+            - name: http-metrics
+              protocol: TCP
+              containerPort: 9092
           volumeMounts:
             - name: uptime
               mountPath: /proc/uptime
@@ -191,11 +191,11 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: eks.amazonaws.com/compute-type
-                operator: NotIn
-                values:
-                - fargate
+              - matchExpressions:
+                  - key: eks.amazonaws.com/compute-type
+                    operator: NotIn
+                    values:
+                      - fargate
       tolerations:
         - operator: Exists
 ---
