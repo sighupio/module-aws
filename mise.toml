@@ -3,8 +3,10 @@
 # license that can be found in the LICENSE file.
 
 [tools]
-kustomize = "5.6.0"
+aws-cli = "2.35.15"
 dyff = "1.9.0"
+helm = "3.21.2"
+kustomize = "5.6.0"
 "ubi:google/addlicense" = "v1.1.1"
 
 # Development task definitions
