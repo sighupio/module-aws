@@ -53,11 +53,10 @@ steps:
         mise use kustomize@5.6.0
         eval "$(mise activate bash --shims)"
       - kustomize build katalog/cluster-autoscaler/base > cluster-autoscaler-base.yml
-      - kustomize build katalog/cluster-autoscaler/v1.29.x > cluster-autoscaler-v1.29.yml
-      - kustomize build katalog/cluster-autoscaler/v1.30.x > cluster-autoscaler-v1.30.yml
-      - kustomize build katalog/cluster-autoscaler/v1.31.x > cluster-autoscaler-v1.31.yml
-      - kustomize build katalog/cluster-autoscaler/v1.32.x > cluster-autoscaler-v1.32.yml
       - kustomize build katalog/cluster-autoscaler/v1.33.x > cluster-autoscaler-v1.33.yml
+      - kustomize build katalog/cluster-autoscaler/v1.34.x > cluster-autoscaler-v1.34.yml
+      - kustomize build katalog/cluster-autoscaler/v1.35.x > cluster-autoscaler-v1.35.yml
+      - kustomize build katalog/cluster-autoscaler/v1.36.x > cluster-autoscaler-v1.36.yml
       - kustomize build katalog/load-balancer-controller > load-balancer-controller.yml
       - kustomize build katalog/node-termination-handler > node-termination-handler.yml
 
@@ -69,34 +68,29 @@ steps:
       - render
     commands:
       # we use --ignore-deprecations because we don't want the CI to fail when the API has not been removed yet.
-      - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.33.0
+      - /pluto detect $${KUBERNETES_MANIFESTS} --ignore-deprecations --target-versions=k8s=v1.36.0
     environment:
       KUBERNETES_MANIFESTS: cluster-autoscaler-base.yml
-
-  - <<: *check-deprecated-apis
-    name: check-deprecated-apis-cluster-autoscaler-v129
-    environment:
-      KUBERNETES_MANIFESTS: cluster-autoscaler-v1.29.yml
-
-  - <<: *check-deprecated-apis
-    name: check-deprecated-apis-cluster-autoscaler-v130
-    environment:
-      KUBERNETES_MANIFESTS: cluster-autoscaler-v1.30.yml
-
-  - <<: *check-deprecated-apis
-    name: check-deprecated-apis-cluster-autoscaler-v131
-    environment:
-      KUBERNETES_MANIFESTS: cluster-autoscaler-v1.31.yml
-
-  - <<: *check-deprecated-apis
-    name: check-deprecated-apis-cluster-autoscaler-v132
-    environment:
-      KUBERNETES_MANIFESTS: cluster-autoscaler-v1.32.yml
 
   - <<: *check-deprecated-apis
     name: check-deprecated-apis-cluster-autoscaler-v133
     environment:
       KUBERNETES_MANIFESTS: cluster-autoscaler-v1.33.yml
+
+  - <<: *check-deprecated-apis
+    name: check-deprecated-apis-cluster-autoscaler-v134
+    environment:
+      KUBERNETES_MANIFESTS: cluster-autoscaler-v1.34.yml
+
+  - <<: *check-deprecated-apis
+    name: check-deprecated-apis-cluster-autoscaler-v135
+    environment:
+      KUBERNETES_MANIFESTS: cluster-autoscaler-v1.35.yml
+
+  - <<: *check-deprecated-apis
+    name: check-deprecated-apis-cluster-autoscaler-v136
+    environment:
+      KUBERNETES_MANIFESTS: cluster-autoscaler-v1.36.yml
 
   - <<: *check-deprecated-apis
     name: check-deprecated-apis-load-balancer-controller
