@@ -1,5 +1,9 @@
 # Load Balancer controller maintenance
 
+**Current Version**: v3.5.0 (Helm Chart 3.5.0)
+**Previous Version**: v3.4.0 (Helm Chart 3.4.0)
+**Last Updated**: September 2026
+
 To maintain the AWS load balancer controller package, you should follow these steps.
 
 Go to <https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/deploy/installation/> and follow the steps for
