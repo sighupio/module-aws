@@ -16,7 +16,8 @@ This is a **minor release** that adds compatibility with **Kubernetes 1.36** and
 
 ## Breaking Changes 🚨
 
-None. Gateway API users should review the [AWS Load Balancer Controller v3.5.0 release notes](https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/tag/v3.5.0) for upstream actions that do not directly affect this module.
+- Kubernetes 1.32 or older are no longer supported
+- Gateway API users should review the [AWS Load Balancer Controller v3.5.0 release notes](https://github.com/kubernetes-sigs/aws-load-balancer-controller/releases/tag/v3.5.0) for upstream actions that do not directly affect this module.
 
 ## Update Guide 🛠️
 
