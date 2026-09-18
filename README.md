@@ -27,10 +27,10 @@ The following packages are included in AWS Module:
 
 | Package                                                                               | Version             | Description                                                                                                 |
 |---------------------------------------------------------------------------------------|---------------------|-------------------------------------------------------------------------------------------------------------|
-| [cluster-autoscaler](katalog/cluster-autoscaler)                                      | `v1.29.0 - v1.35.0` | A component that automatically adjusts the size of a Kubernetes Cluster                                     |
+| [cluster-autoscaler](katalog/cluster-autoscaler)                                      | `v1.33.0 - v1.36.1` | A component that automatically adjusts the size of a Kubernetes Cluster                                     |
 | [IAM role for cluster-autoscaler](modules/iam-for-cluster-autoscaler)                 | `-`                 | Terraform module to manage IAM role used by cluster-autoscaler                                              |
 | [aws-node-termination-handler](katalog/node-termination-handler)                      | `v1.25.6`           | Automatically manage graceful termination of pods in the event that one node is retired by AWS              |
-| [aws-load-balancer-controller](katalog/load-balancer-controller)                      | `v3.4.0`            | AWS Load Balancer Controller is a controller to help manage Elastic Load Balancers for a Kubernetes cluster |
+| [aws-load-balancer-controller](katalog/load-balancer-controller)                      | `v3.5.0`            | AWS Load Balancer Controller is a controller to help manage Elastic Load Balancers for a Kubernetes cluster |
 | [IAM role for aws-load-balancer-controller](modules/iam-for-load-balancer-controller) | `-`                 | Terraform module to manage IAM role used by aws-load-balancer-controller                                    |
 | [IAM role for aws-ebs-csi-driver](modules/iam-for-ebs-csi-driver)                     | `-`                 | Terraform module to manage IAM role used by EBS CSI driver                                                  |
 | [EKS Addons](modules/eks-addons)                                                      | `-`                 | Terraform module to install the main EKS Addons (coredns, EBS CSI Driver, snapshot controller, VPC cni)     |
@@ -42,12 +42,10 @@ Click on each package to see its full documentation.
 
 | Kubernetes Version |   Compatibility    | Notes           |
 |--------------------|:------------------:|-----------------|
-| `1.30.x`           | :white_check_mark: | No known issues |
-| `1.31.x`           | :white_check_mark: | No known issues |
-| `1.32.x`           | :white_check_mark: | No known issues |
 | `1.33.x`           | :white_check_mark: | No known issues |
 | `1.34.x`           | :white_check_mark: | No known issues |
 | `1.35.x`           | :white_check_mark: | No known issues |
+| `1.36.x`           | :white_check_mark: | No known issues |
 
 Check the [compatibility matrix][compatibility-matrix] for additional informations about previous releases of the modules.
 
