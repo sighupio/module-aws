@@ -7,7 +7,7 @@
   AWS Module
 </h1>
 
-![Release](https://img.shields.io/badge/Latest%20Release-v5.3.0-blue)
+![Release](https://img.shields.io/badge/Latest%20Release-v5.4.0-blue)
 ![License](https://img.shields.io/github/license/sighupio/module-aws?label=License)
 ![Slack](https://img.shields.io/badge/slack-@kubernetes/fury-yellow.svg?logo=slack&label=Slack)
 
@@ -86,7 +86,7 @@ To install SD on EKS from scratch, follow the [Getting started on EKS][getting-s
 [kfd-docs]: https://docs.sighup.io/docs/distribution/
 [schema-reference]: https://docs.sighup.io/docs/reference/ekscluster#specdistributionmodulesaws
 [getting-started-eks]: https://docs.sighup.io/docs/getting-started/distro-on-eks
-[compatibility-matrix]: https://github.com/sighupio/module-aws/blob/master/docs/COMPATIBILITY_MATRIX.md
+[compatibility-matrix]: https://github.com/sighupio/module-aws/blob/main/docs/COMPATIBILITY_MATRIX.md
 
 <!-- </SD-DOCS> -->
 
